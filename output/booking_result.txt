@@ -1,0 +1,11 @@
+Test booking result
+Car: Test Car 1 (TEST-001)
+Employee: Test Employee
+Date and time: 2026-06-10 10:00-10:30
+Route: Test Route
+Purpose: Test Check
+
+Car is busy. Booking was not added.
+
+Conflicting bookings:
+ID 1: Test Car 1 (TEST-001), 2026-06-10 09:00-11:00, Test Employee 1, Test Route 1

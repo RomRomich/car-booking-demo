@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block title %}Все брони{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="filters" method="get">
+        <label>
+            Дата
+            <input type="date" name="date" value="{{ selected_date }}">
+        </label>
+        <label>
+            Автомобиль
+            <select name="car_name">
+                <option value="">Все автомобили</option>
+                {% for car in cars %}
+                    <option value="{{ car.car_name }}" {% if selected_car == car.car_name %}selected{% endif %}>
+                        {{ car.car_name }} ({{ car.car_number }})
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <button type="submit">Применить</button>
+        <a class="button secondary" href="{{ url_for('index') }}">Сбросить</a>
+    </form>
+    <a class="button primary" href="{{ url_for('new_booking') }}">Новая бронь</a>
+</section>
+
+<section class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Автомобиль</th>
+                <th>Сотрудник</th>
+                <th>Подразделение</th>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Маршрут</th>
+                <th>Цель</th>
+                <th>Статус</th>
+                <th>Комментарий</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking.id }}</td>
+                    <td>{{ booking.car_name }}<br><span>{{ booking.car_number }}</span></td>
+                    <td>{{ booking.employee_name }}</td>
+                    <td>{{ booking.department }}</td>
+                    <td>{{ booking.date }}</td>
+                    <td>{{ booking.start_time }}-{{ booking.end_time }}</td>
+                    <td>{{ booking.route }}</td>
+                    <td>{{ booking.purpose }}</td>
+                    <td><span class="status {{ booking.status }}">{{ booking.status }}</span></td>
+                    <td>{{ booking.comment }}</td>
+                    <td>
+                        {% if booking.status == "confirmed" %}
+                            <form method="post" action="{{ url_for('cancel_booking', booking_id=booking.id) }}">
+                                <button class="danger" type="submit">Отменить</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="11" class="empty">Брони не найдены</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

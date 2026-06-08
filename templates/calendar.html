@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Календарь броней{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="filters" method="get">
+        <label>
+            Дата
+            <input type="date" name="date" value="{{ selected_date }}">
+        </label>
+        <button type="submit">Показать</button>
+        <a class="button secondary" href="{{ url_for('calendar') }}">Все даты</a>
+    </form>
+</section>
+
+<section class="calendar-wrap">
+    <table class="calendar-table">
+        <thead>
+            <tr>
+                <th>Автомобиль</th>
+                {% for date in dates %}
+                    <th>{{ date }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for car in cars %}
+                <tr>
+                    <th>{{ car.car_name }}<br><span>{{ car.car_number }}</span></th>
+                    {% for date in dates %}
+                        <td>
+                            {% for booking in grid[car.car_name][date] %}
+                                <div class="booking-block {{ booking.status }}">
+                                    <strong>{{ booking.start_time }}-{{ booking.end_time }}</strong>
+                                    <span>{{ booking.employee_name }}</span>
+                                    <span>{{ booking.route }}</span>
+                                </div>
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% else %}
+                <tr>
+                    <td class="empty">Автомобили не найдены</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not dates %}
+        <div class="empty calendar-empty">Брони для календаря не найдены</div>
+    {% endif %}
+</section>
+{% endblock %}

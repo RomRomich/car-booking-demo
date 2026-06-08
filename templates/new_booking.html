@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Новая бронь{% endblock %}
+
+{% block content %}
+<section class="form-layout">
+    <form class="booking-form" method="post">
+        <label>
+            Автомобиль
+            <select name="car" required>
+                <option value="">Выберите автомобиль</option>
+                {% for car in cars %}
+                    {% set value = car.car_name ~ "|" ~ car.car_number %}
+                    <option value="{{ value }}" {% if form_data.get("car") == value %}selected{% endif %}>
+                        {{ car.car_name }} ({{ car.car_number }})
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            ФИО сотрудника
+            <input type="text" name="employee_name" value="{{ form_data.get('employee_name', '') }}" required>
+        </label>
+
+        <label>
+            Подразделение
+            <input type="text" name="department" value="{{ form_data.get('department', '') }}" required>
+        </label>
+
+        <div class="field-row">
+            <label>
+                Дата поездки
+                <input type="date" name="date" value="{{ form_data.get('date', '') }}" required>
+            </label>
+            <label>
+                Время начала
+                <input type="time" name="start_time" value="{{ form_data.get('start_time', '') }}" required>
+            </label>
+            <label>
+                Время окончания
+                <input type="time" name="end_time" value="{{ form_data.get('end_time', '') }}" required>
+            </label>
+        </div>
+
+        <label>
+            Маршрут
+            <input type="text" name="route" value="{{ form_data.get('route', '') }}" required>
+        </label>
+
+        <label>
+            Цель поездки
+            <input type="text" name="purpose" value="{{ form_data.get('purpose', '') }}" required>
+        </label>
+
+        <label>
+            Комментарий
+            <textarea name="comment" rows="4">{{ form_data.get('comment', '') }}</textarea>
+        </label>
+
+        <div class="actions">
+            <button class="primary" type="submit">Забронировать</button>
+            <a class="button secondary" href="{{ url_for('index') }}">Назад</a>
+        </div>
+    </form>
+
+    {% if conflicts %}
+        <aside class="conflicts">
+            <h2>Конфликтующие брони</h2>
+            {% for booking in conflicts %}
+                <div class="conflict-item">
+                    <strong>{{ booking.car_name }} ({{ booking.car_number }})</strong>
+                    <span>{{ booking.date }} {{ booking.start_time }}-{{ booking.end_time }}</span>
+                    <span>{{ booking.employee_name }}</span>
+                    <span>{{ booking.route }}</span>
+                </div>
+            {% endfor %}
+        </aside>
+    {% endif %}
+</section>
+{% endblock %}
