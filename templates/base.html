@@ -4,17 +4,25 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}Бронирование автомобилей{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/georg_logo.png') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
     <header class="topbar">
-        <div>
-            <h1>Бронирование автомобилей</h1>
+        <div class="brand-wrap">
+            <img class="brand-logo" src="{{ url_for('static', filename='img/georg_logo.png') }}" alt="Георг Полимер">
+            <div class="brand-text">
+                <h1 class="brand-title">Бронирование автомобилей</h1>
+                <span class="brand-subtitle">Система резервирования служебного транспорта</span>
+            </div>
         </div>
         <nav class="nav">
             <a href="{{ url_for('index') }}">Брони</a>
             <a href="{{ url_for('new_booking') }}">Новая бронь</a>
-            <a href="{{ url_for('calendar') }}">Календарь</a>
+            <a href="{{ url_for('calendar_view') }}">Календарь</a>
+            <a href="{{ url_for('logs_page') }}">Журнал</a>
+            <a href="{{ url_for('import_page') }}">Импорт Excel</a>
+            <a href="{{ url_for('export_page') }}">Экспорт Excel</a>
         </nav>
     </header>
 

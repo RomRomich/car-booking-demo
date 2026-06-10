@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Журнал действий{% endblock %}
+
+{% block content %}
+<section class="toolbar">
+    <form class="filters" method="get">
+        <label>
+            Действие
+            <select name="action">
+                <option value="">Все</option>
+                {% for action in log_actions %}
+                    <option value="{{ action }}" {% if filters.action == action %}selected{% endif %}>
+                        {{ action_labels[action] }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Автомобиль
+            <select name="car_name">
+                <option value="">Все</option>
+                {% for car in cars %}
+                    <option value="{{ car.name }}" {% if filters.car_name == car.name %}selected{% endif %}>
+                        {{ car.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+        <label>
+            Дата с
+            <input type="date" name="date_from" value="{{ filters.date_from }}">
+        </label>
+        <label>
+            Дата по
+            <input type="date" name="date_to" value="{{ filters.date_to }}">
+        </label>
+        <label>
+            Поиск
+            <input type="search" name="search" value="{{ filters.search }}" placeholder="Водитель или детали">
+        </label>
+        <button class="primary" type="submit">Показать</button>
+        <a class="button secondary" href="{{ url_for('logs_page') }}">Сбросить</a>
+    </form>
+</section>
+
+<section class="table-wrap">
+    <table>
+        <thead>
+            <tr>
+                <th>Дата и время</th>
+                <th>Действие</th>
+                <th>Кто сделал</th>
+                <th>Автомобиль</th>
+                <th>Водитель</th>
+                <th>Детали</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in logs %}
+                <tr>
+                    <td>{{ item.created_at_ru }}</td>
+                    <td>{{ item.action_label }}</td>
+                    <td>{{ item.actor_name }}</td>
+                    <td>{{ item.car_name }}</td>
+                    <td>{{ item.employee_name }}</td>
+                    <td>{{ item.details }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="empty">Записей журнала пока нет</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+{% endblock %}

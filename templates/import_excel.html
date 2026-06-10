@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Импорт Excel{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Импорт старого Excel</h2>
+    <p>Файл для импорта:</p>
+    <code>{{ import_file }}</code>
+    <p>Машина определяется по названию листа. В базе должно остаться 3 машины.</p>
+
+    <form method="post" class="actions">
+        <button class="primary" type="submit">Импортировать</button>
+        <a class="button secondary" href="{{ url_for('index') }}">Назад</a>
+    </form>
+
+    {% if result %}
+        <div class="import-result">
+            <h3>Результат импорта</h3>
+            <p>Строк найдено: <strong>{{ result.found }}</strong></p>
+            <p>Импортировано: <strong>{{ result.imported }}</strong></p>
+            <p>Дублей пропущено: <strong>{{ result.duplicates }}</strong></p>
+            <p>Строк с ошибками пропущено: <strong>{{ result.errors }}</strong></p>
+            <p>Машин в базе: <strong>{{ cars_count }}</strong></p>
+        </div>
+    {% endif %}
+</section>
+{% endblock %}

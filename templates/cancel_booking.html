@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Отмена брони{% endblock %}
+
+{% block content %}
+<section class="panel narrow">
+    <h2>Отмена брони</h2>
+    <p><strong>{{ booking.car_name }}</strong></p>
+    <p>{{ booking.start_date_ru }} - {{ booking.end_date_ru }}{% if booking.time_range %}, {{ booking.time_range }}{% endif %}</p>
+    <p>{{ booking.employee_name }} · {{ booking.route }}</p>
+
+    <form class="booking-form plain" method="post">
+        <label>
+            Кто отменяет бронь
+            <input type="text" name="actor_name" value="{{ booking.employee_name }}">
+        </label>
+        <label>
+            Причина отмены
+            <textarea name="reason" rows="4" required></textarea>
+        </label>
+        <div class="actions">
+            <button class="danger" type="submit">Отменить бронь</button>
+            <a class="button secondary" href="{{ url_for('index') }}">Назад</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

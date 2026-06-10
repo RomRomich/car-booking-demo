@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+<section class="form-layout">
+    <form class="booking-form" method="post" action="{{ action_url }}">
+        <h2>{{ title }}</h2>
+
+        <label>
+            Автомобиль
+            <select name="car_id" required>
+                <option value="">Выберите автомобиль</option>
+                {% for car in cars %}
+                    <option value="{{ car.id }}" {% if booking.car_id|string == car.id|string %}selected{% endif %}>
+                        {{ car.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Ф.И.О. водителя
+            <input type="text" name="employee_name" value="{{ booking.employee_name or '' }}" required>
+        </label>
+
+        <div class="field-row">
+            <label>
+                Дата выезда
+                <input type="date" name="start_date" value="{{ booking.start_date or '' }}" required>
+            </label>
+            <label>
+                Время выезда
+                <input type="time" name="start_time" value="{{ booking.start_time or '' }}">
+            </label>
+            <label>
+                Дата приезда
+                <input type="date" name="end_date" value="{{ booking.end_date or '' }}" required>
+            </label>
+            <label>
+                Время приезда
+                <input type="time" name="end_time" value="{{ booking.end_time or '' }}">
+            </label>
+        </div>
+
+        <label>
+            Маршрут
+            <input type="text" name="route" value="{{ booking.route or '' }}" required>
+        </label>
+
+        <label>
+            Показание одометра при возвращении
+            <input type="text" name="odometer_return" value="{{ booking.odometer_return or '' }}">
+        </label>
+
+        {% if is_edit %}
+            <label>
+                Статус
+                <select name="status">
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if booking.status == status %}selected{% endif %}>
+                            {{ status_labels[status] }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label>
+                Кто изменил бронь
+                <input type="text" name="actor_name" value="">
+            </label>
+        {% else %}
+            <input type="hidden" name="status" value="confirmed">
+            <label>
+                Кто оформил бронь
+                <input type="text" name="actor_name" value="{{ booking.actor_name or '' }}">
+            </label>
+        {% endif %}
+
+        <label>
+            Комментарий
+            <textarea name="comment" rows="4">{{ booking.comment or '' }}</textarea>
+        </label>
+
+        <div class="actions">
+            <button class="primary" type="submit">Сохранить</button>
+            <a class="button secondary" href="{{ url_for('index') }}">Назад</a>
+        </div>
+    </form>
+
+    {% if conflicts %}
+        <aside class="conflicts">
+            <h2>Конфликтующие брони</h2>
+            {% for conflict in conflicts %}
+                <div class="conflict-item">
+                    <strong>{{ conflict.car_name }}</strong>
+                    <span>{{ conflict.start_date_ru }} - {{ conflict.end_date_ru }}</span>
+                    {% if conflict.time_range %}
+                        <span>{{ conflict.time_range }}</span>
+                    {% endif %}
+                    <span>{{ conflict.employee_name }}</span>
+                    <span>{{ conflict.route }}</span>
+                </div>
+            {% endfor %}
+        </aside>
+    {% endif %}
+</section>
+{% endblock %}

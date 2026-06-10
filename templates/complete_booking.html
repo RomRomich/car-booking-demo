@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Завершение поездки{% endblock %}
+
+{% block content %}
+<section class="panel narrow">
+    <h2>Завершение поездки</h2>
+    <p><strong>{{ booking.car_name }}</strong></p>
+    <p>{{ booking.start_date_ru }} - {{ booking.end_date_ru }}{% if booking.time_range %}, {{ booking.time_range }}{% endif %}</p>
+    <p>{{ booking.employee_name }} · {{ booking.route }}</p>
+
+    <form class="booking-form plain" method="post">
+        <label>
+            Кто завершил поездку
+            <input type="text" name="actor_name" value="{{ booking.employee_name }}">
+        </label>
+        <label>
+            Показание одометра
+            <input type="text" name="odometer_return" value="{{ booking.odometer_return or '' }}" required>
+        </label>
+        <label>
+            Комментарий
+            <textarea name="completion_comment" rows="4"></textarea>
+        </label>
+        <div class="actions">
+            <button class="primary" type="submit">Завершить поездку</button>
+            <a class="button secondary" href="{{ url_for('index') }}">Назад</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

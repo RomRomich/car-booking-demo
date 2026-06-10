@@ -1,55 +1,52 @@
 {% extends "base.html" %}
 
-{% block title %}Календарь броней{% endblock %}
+{% block title %}Календарь{% endblock %}
 
 {% block content %}
 <section class="toolbar">
-    <form class="filters" method="get">
-        <label>
-            Дата
-            <input type="date" name="date" value="{{ selected_date }}">
-        </label>
-        <button type="submit">Показать</button>
-        <a class="button secondary" href="{{ url_for('calendar') }}">Все даты</a>
-    </form>
+    <div class="month-title">
+        <h2>{{ "%02d"|format(month) }}.{{ year }}</h2>
+    </div>
+    <div class="actions">
+        <a class="button secondary" href="{{ url_for('calendar_view', year=prev_year, month=prev_month) }}">Предыдущий месяц</a>
+        <a class="button secondary" href="{{ url_for('calendar_view', year=today.year, month=today.month) }}">Текущий месяц</a>
+        <a class="button secondary" href="{{ url_for('calendar_view', year=next_year, month=next_month) }}">Следующий месяц</a>
+    </div>
 </section>
 
 <section class="calendar-wrap">
-    <table class="calendar-table">
+    <table class="calendar-table month-calendar">
         <thead>
             <tr>
                 <th>Автомобиль</th>
-                {% for date in dates %}
-                    <th>{{ date }}</th>
+                {% for day in days %}
+                    <th class="{% if day == today %}today{% endif %}">
+                        {{ day.day }}<br><span>{{ format_date_ru(day) }}</span>
+                    </th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
             {% for car in cars %}
                 <tr>
-                    <th>{{ car.car_name }}<br><span>{{ car.car_number }}</span></th>
-                    {% for date in dates %}
-                        <td>
-                            {% for booking in grid[car.car_name][date] %}
-                                <div class="booking-block {{ booking.status }}">
-                                    <strong>{{ booking.start_time }}-{{ booking.end_time }}</strong>
-                                    <span>{{ booking.employee_name }}</span>
+                    <th>{{ car.name }}<br><span>{{ car.number }}</span></th>
+                    {% for day in days %}
+                        {% set day_key = day.isoformat() %}
+                        <td class="{% if day == today %}today{% endif %}">
+                            {% for booking in grid[car.id][day_key] %}
+                                <a class="booking-block {{ booking.status }}" href="{{ url_for('edit_booking', booking_id=booking.id) }}">
+                                    <strong>{{ booking.employee_name }}</strong>
                                     <span>{{ booking.route }}</span>
-                                </div>
+                                    {% if booking.time_range %}
+                                        <span>{{ booking.time_range }}</span>
+                                    {% endif %}
+                                </a>
                             {% endfor %}
                         </td>
                     {% endfor %}
                 </tr>
-            {% else %}
-                <tr>
-                    <td class="empty">Автомобили не найдены</td>
-                </tr>
             {% endfor %}
         </tbody>
     </table>
-
-    {% if not dates %}
-        <div class="empty calendar-empty">Брони для календаря не найдены</div>
-    {% endif %}
 </section>
 {% endblock %}

@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Экспорт Excel{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h2>Экспорт Excel готов</h2>
+    <p>Файл создан:</p>
+    <code>{{ export_file }}</code>
+    <div class="actions">
+        <a class="button accent" href="{{ url_for('download_export') }}">Скачать файл</a>
+        <a class="button secondary" href="{{ url_for('index') }}">На главную</a>
+        <a class="button secondary" href="{{ url_for('logs_page') }}">Журнал</a>
+    </div>
+</section>
+{% endblock %}
